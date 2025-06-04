@@ -1,10 +1,15 @@
 const { Telegraf, Markup } = require('telegraf');
 
-// Замените на ваш токен бота от BotFather
-const BOT_TOKEN = '8095938160:AAGLCJBZkfB46kFZWON1865C7fBoSTYn6M0';
+// Токен из переменной окружения
+const BOT_TOKEN = process.env.BOT_TOKEN || 'YOUR_BOT_TOKEN_HERE';
 
 // URL вашего Web App
-const WEB_APP_URL = 'https://t.me/project_rps_bot/rps_app';
+const WEB_APP_URL = 'https://chimerical-kitten-5e244a.netlify.app';
+
+if (!BOT_TOKEN || BOT_TOKEN === 'YOUR_BOT_TOKEN_HERE') {
+    console.error('❌ BOT_TOKEN не найден! Установите переменную окружения BOT_TOKEN');
+    process.exit(1);
+}
 
 const bot = new Telegraf(BOT_TOKEN);
 
@@ -57,11 +62,31 @@ bot.on('message', (ctx) => {
     );
 });
 
-// Запуск бота
-bot.launch();
+// Обработка ошибок
+bot.catch((err, ctx) => {
+    console.error('❌ Ошибка бота:', err);
+    console.error('Context:', ctx.update);
+});
 
-console.log('🤖 Бот запущен! Нажмите Ctrl+C для остановки.');
+// Запуск бота
+bot.launch()
+    .then(() => {
+        console.log('🤖 Бот успешно запущен!');
+        console.log('📱 Токен:', BOT_TOKEN.substring(0, 20) + '...');
+        console.log('🌐 Web App URL:', WEB_APP_URL);
+    })
+    .catch((err) => {
+        console.error('❌ Ошибка запуска бота:', err);
+        process.exit(1);
+    });
 
 // Graceful shutdown
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
+process.once('SIGINT', () => {
+    console.log('🛑 Получен сигнал SIGINT, останавливаем бота...');
+    bot.stop('SIGINT');
+});
+
+process.once('SIGTERM', () => {
+    console.log('🛑 Получен сигнал SIGTERM, останавливаем бота...');
+    bot.stop('SIGTERM');
+});
