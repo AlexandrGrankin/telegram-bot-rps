@@ -1,0 +1,19 @@
+{
+  "name": "rock-paper-scissors-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot for Rock Paper Scissors game",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "dev": "nodemon bot.js"
+  },
+  "dependencies": {
+    "telegraf": "^4.12.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["telegram", "bot", "game", "rock-paper-scissors"],
+  "author": "Your Name",
+  "license": "MIT"
+}
